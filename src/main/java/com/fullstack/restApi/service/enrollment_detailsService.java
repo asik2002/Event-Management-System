@@ -28,8 +28,8 @@ public class enrollment_detailsService {
         }
         return "Unable to UnEnroll";
     }
-
-
-
+    public List<String> enrolledUsersOfEvent(Integer eventId){
+            return this.repository.findEmailIdByEventId(eventId);
+    }
 
 }
