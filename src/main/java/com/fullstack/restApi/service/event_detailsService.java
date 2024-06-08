@@ -2,8 +2,11 @@ package com.fullstack.restApi.service;
 
 import com.fullstack.restApi.persistence.event_details;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import com.fullstack.restApi.persistence.event_detailsRepository;
+
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -12,18 +15,31 @@ import java.util.Optional;
 public class event_detailsService {
 @Autowired
 event_detailsRepository repository;
-
-public List<event_details> upcomingEvents(){                                            // Retrieving Upcoming Events
     LocalDate today = LocalDate.now();
-    return this.repository.findByStartDateGreaterThan(today);
+public List<event_details> getUpcomingEventsNotEnrolledByUser(String emailId){                                            // Retrieving Upcoming Events
+    return this.repository.findUpcomingEventsNotEnrolledByUser(today, emailId);
+}
+public List<event_details> getEnrolledEventsByUser(String emailId){
+    return this.repository.findEventsEnrolledByUser(emailId,today);
+}
+public List<event_details> getEnrolledFinishedEventsByUser(String emailId){
+    return this.repository.findFinishedEventsEnrolledByUser(emailId,today);
+}
+public List<event_details> recentEvents(){
+    Pageable topFour= PageRequest.of(0,4);
+    return this.repository.findTop4ByStartDateLessThanOrderByStartDateDesc(today,topFour);
 }
 public List<event_details> getAll(){                                                    // Retrieve all Event Details(adminUse)
     return this.repository.findAll();
 }
 
-public List<event_details> getByHost(String hostMail){
-     return this.repository.findByHostEmail(hostMail);
+public List<event_details> getPreviousByHost(String hostMail){
+     return this.repository.findPreviousByHostEmail(hostMail,today);
 }
+public List<event_details> getUpcomingByHost(String hostMail){
+        return this.repository.findUpcomingByHostEmail(hostMail,today);
+}
+
 public String createEvent(event_details event_details){                                 // Creating New Event
 
     event_details existingEvent = this.repository.findByStartDateAndTimeAndLocation(
@@ -72,7 +88,6 @@ public String UpdateEvent(Integer eventId,event_details event_details){         
         }
     }
     return "Unable to Update";
-
 }
 
 }

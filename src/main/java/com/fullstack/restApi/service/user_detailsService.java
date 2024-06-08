@@ -16,20 +16,20 @@ public class user_detailsService {
     public user_details getById(String email){                                  //      To get details of specified user(admin use)
         return this.repository.findById(email).get();
     }
-    public String register(user_details user_details){                          //      To register new user
+    public Boolean register(user_details user_details){                          //      To register new user
         if(repository.findByEmail(user_details.getEmail())==null){
         this.repository.save(user_details);
-        return "Registration Successfull";
+        return true;
         }
-         return "Email already Exist";
+         return false;
     }
 
-    public String authenticateUser(String email,String password){               //      Login Authentication
+    public Boolean authenticateUser(String email,String password){               //      Login Authentication
         user_details user_details =repository.findByEmail(email);
         if (user_details!=null && user_details.getPassword().equals(password)){
-            return "Login Successfull";
+            return true;
         }
-        return "Check Password or Email";
+        return false;
     }
     public String delete(String email) {                                        //     Deleting user
         Optional<user_details> entity = repository.findById(email);

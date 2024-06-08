@@ -19,13 +19,13 @@ public class user_detailsResource {
         return this.Service.getById(email);
     }
     @PostMapping(value="/register")
-    public String register(@RequestBody user_details user_details){
-        response=  this.Service.register(user_details);
+    public Boolean register(@RequestBody user_details user_details){
+        Boolean response=  this.Service.register(user_details);
         return response;
     }
     @PostMapping(value ="/login")
-    public String login(@RequestBody user_details user_details){
-        response= this.Service.authenticateUser(user_details.getEmail(),user_details.getPassword());
+    public Boolean login(@RequestBody user_details user_details){
+        Boolean response= this.Service.authenticateUser(user_details.getEmail(),user_details.getPassword());
         return response;
 
     }
