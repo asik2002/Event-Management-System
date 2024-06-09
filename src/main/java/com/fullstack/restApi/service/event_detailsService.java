@@ -51,14 +51,14 @@ public String createEvent(event_details event_details){                         
     }
         event_details savedEvent = this.repository.save(event_details);
         Integer eventId= savedEvent.getEventId();
-        return "New Event Registered and your Event Id is " + eventId;
+        return "New Event Registered Successfully";
 }
 public String deleteEvent(Integer eventId){                                                // Deleting Event
 
     Optional<event_details> entity = repository.findById(eventId);
     if (entity.isPresent()) {
         repository.deleteById(eventId);
-        return "Event id "+eventId+" deleted";
+        return "Event deleted Successfully";
     }
     return "Event does not Exist";
 }
@@ -74,14 +74,8 @@ public String UpdateEvent(Integer eventId,event_details event_details){         
             entityData.get().setTime(event_details.getTime());
             entityData.get().setLocation(event_details.getLocation());
             entityData.get().setTotalDays(event_details.getTotalDays());
-            if(this.repository.findByStartDateAndTimeAndLocation(
-                    event_details.getStartDate(),
-                    event_details.getTime(),
-                    event_details.getLocation())==null){
             this.repository.save(entityData.get());
             return "Updated Successfully";
-            }
-            return "Event with the same date, time, and location already exists";
         }
         catch (Exception e){
             return "Fill all the necessary Details";
