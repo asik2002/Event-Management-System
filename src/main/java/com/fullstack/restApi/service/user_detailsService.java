@@ -1,4 +1,5 @@
 package com.fullstack.restApi.service;
+import com.fullstack.restApi.config.PasswordHasher;
 import com.fullstack.restApi.persistence.user_details;
 import com.fullstack.restApi.persistence.user_detailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +17,25 @@ public class user_detailsService {
     public user_details getById(String email){                                  //      To get details of specified user(admin use)
         return this.repository.findById(email).get();
     }
-    public Boolean register(user_details user_details){                          //      To register new user
-        if(repository.findByEmail(user_details.getEmail())==null){
-        this.repository.save(user_details);
-        return true;
+
+
+    public Boolean register(user_details userDetails) {
+        if (repository.findByEmail(userDetails.getEmail()) == null) {
+            String hashedPassword = PasswordHasher.hashPassword(userDetails.getPassword());
+            userDetails.setPassword(hashedPassword);
+            this.repository.save(userDetails);
+            return true;
         }
-         return false;
+        return false;
     }
 
     public Boolean authenticateUser(String email,String password){               //      Login Authentication
         user_details user_details =repository.findByEmail(email);
-        if (user_details!=null && user_details.getPassword().equals(password)){
-            return true;
+        if (user_details != null) {
+            String hashedPassword = PasswordHasher.hashPassword(password);
+            if (user_details.getPassword().equals(hashedPassword)) {
+                return true;
+            }
         }
         return false;
     }

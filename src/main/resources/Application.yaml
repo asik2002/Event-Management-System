@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true;databaseName=fullstack;sendTimeAsDatetime=false;
-    username: Asik
-    password: 12345
+    url: ${db_url}
+    username: ${db_user}
+    password: ${db_pass}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
     show-sql: true
